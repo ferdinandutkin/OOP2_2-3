@@ -247,8 +247,12 @@ namespace OOP2_2
             var propInfo = ElementType.GetProperty(name);
             var descriptor = GetPropertyDescriptor(propInfo);
             ListedCollection.ApplySort(descriptor, sortDirection);
+           
         }
 
-       
+        private void toolStripButton1_ButtonClick(object sender, EventArgs e)
+        {
+            new QueryBuiler(ElementType).Show();
+        }
     }
 }

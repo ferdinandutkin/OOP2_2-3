@@ -132,6 +132,7 @@ namespace OOP2_2
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(39, 24);
             this.toolStripButton1.Text = "Поиск";
+            this.toolStripButton1.ButtonClick += new System.EventHandler(this.toolStripButton1_ButtonClick);
             // 
             // toolStripSortButton
             // 
