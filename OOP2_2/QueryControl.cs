@@ -12,11 +12,13 @@ namespace OOP2_2
 {
     public partial class QueryControl : UserControl
     {
+        public override string Text { get => groupBox1.Text; set => groupBox1.Text = value; }
         public QueryControl()
         {
             InitializeComponent();
-
-            this.listBox1.Items.Add(new Button() { Text = "ddd" });
+ 
         }
+
+       
     }
 }

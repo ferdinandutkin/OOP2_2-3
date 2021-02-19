@@ -200,6 +200,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="QueryBuiler.resx">
+      <DependentUpon>QueryBuiler.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="QueryControl.resx">
       <DependentUpon>QueryControl.cs</DependentUpon>
     </EmbeddedResource>
