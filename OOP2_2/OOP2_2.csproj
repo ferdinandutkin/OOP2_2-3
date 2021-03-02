@@ -165,6 +165,12 @@
     <Compile Include="QueryControl.Designer.cs">
       <DependentUpon>QueryControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="QueryControlListElement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QueryControlListElement.Designer.cs">
+      <DependentUpon>QueryControlListElement.cs</DependentUpon>
+    </Compile>
     <Compile Include="RowComparer.cs" />
     <Compile Include="ValidatingEnumComboBox.cs">
       <SubType>Component</SubType>
@@ -205,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="QueryControl.resx">
       <DependentUpon>QueryControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryControlListElement.resx">
+      <DependentUpon>QueryControlListElement.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>

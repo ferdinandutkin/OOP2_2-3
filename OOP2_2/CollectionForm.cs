@@ -67,7 +67,7 @@ namespace OOP2_2
 
 
 
-        IList List
+        public IList List
         {
             get;
             set;
@@ -95,10 +95,6 @@ namespace OOP2_2
             };
 
            
-         
-            
- 
-            
 
 
             var genericList = Activator.CreateInstance(ListType);
@@ -242,6 +238,10 @@ namespace OOP2_2
           
         }
 
+
+ 
+        
+
         private void SortByPropName(string name, ListSortDirection sortDirection)
         {
             var propInfo = ElementType.GetProperty(name);
@@ -252,7 +252,23 @@ namespace OOP2_2
 
         private void toolStripButton1_ButtonClick(object sender, EventArgs e)
         {
-            new QueryBuiler(ElementType).Show();
+            var queryBuilder = new QueryBuiler(GetSerializableProperties(ElementType));
+            queryBuilder.FindClick += (_, _) =>
+            {
+                MessageBox.Show(queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType).Count.ToString());
+                
+                var cf = new CollectionForm(ElementType);
+                cf.Show();
+
+                cf.ListedCollection = Activator.CreateInstance(BindingListType, queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType)) as IBindingList;
+
+
+            };
+
+            queryBuilder.Show();
+
+
         }
     }
 }
+ 
