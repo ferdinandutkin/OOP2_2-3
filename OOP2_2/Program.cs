@@ -90,6 +90,11 @@ namespace OOP2_2
             public string Name { get; set; } = string.Empty;
         
         }
+
+
+
+
+      
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -98,7 +103,7 @@ namespace OOP2_2
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CollectionForm(typeof(ELib)));
+            Application.Run(new CollectionForm(typeof(Person)));
         }
     }
 }

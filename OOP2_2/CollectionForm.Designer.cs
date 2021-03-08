@@ -37,7 +37,7 @@ namespace OOP2_2
             this.toolStripButtonFileOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonFIleSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSortButton = new System.Windows.Forms.ToolStripSplitButton();
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonCreate = new System.Windows.Forms.Button();
@@ -63,11 +63,14 @@ namespace OOP2_2
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -95,7 +98,7 @@ namespace OOP2_2
             this.toolStripSortButton});
             this.toolStrip1.Location = new System.Drawing.Point(9, 28);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(155, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(145, 31);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -105,7 +108,7 @@ namespace OOP2_2
             this.toolStripButtonFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileOpen.Image")));
             this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
-            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(29, 28);
             this.toolStripButtonFileOpen.Text = "Открыть";
             this.toolStripButtonFileOpen.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -130,9 +133,9 @@ namespace OOP2_2
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(39, 28);
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 28);
             this.toolStripButton1.Text = "Поиск";
-            this.toolStripButton1.ButtonClick += new System.EventHandler(this.toolStripButton1_ButtonClick);
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // toolStripSortButton
             // 
@@ -143,23 +146,22 @@ namespace OOP2_2
             this.toolStripSortButton.Name = "toolStripSortButton";
             this.toolStripSortButton.Size = new System.Drawing.Size(39, 28);
             this.toolStripSortButton.Text = "Сортировка";
-            this.toolStripSortButton.ButtonClick += new System.EventHandler(this.toolStripButton2_ButtonClick);
             // 
             // buttonDelete
             // 
             this.buttonDelete.Location = new System.Drawing.Point(3, 185);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(157, 57);
+            this.buttonDelete.Size = new System.Drawing.Size(121, 57);
             this.buttonDelete.TabIndex = 5;
             this.buttonDelete.Text = "Удалить";
             this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
+            this.buttonDelete.Click += new System.EventHandler(this.DeleteHandler);
             // 
             // buttonCreate
             // 
             this.buttonCreate.Location = new System.Drawing.Point(3, 94);
             this.buttonCreate.Name = "buttonCreate";
-            this.buttonCreate.Size = new System.Drawing.Size(157, 57);
+            this.buttonCreate.Size = new System.Drawing.Size(121, 57);
             this.buttonCreate.TabIndex = 4;
             this.buttonCreate.Text = "Создать";
             this.buttonCreate.UseVisualStyleBackColor = true;
@@ -169,7 +171,7 @@ namespace OOP2_2
             // 
             this.buttonShow.Location = new System.Drawing.Point(3, 3);
             this.buttonShow.Name = "buttonShow";
-            this.buttonShow.Size = new System.Drawing.Size(157, 57);
+            this.buttonShow.Size = new System.Drawing.Size(121, 57);
             this.buttonShow.TabIndex = 3;
             this.buttonShow.Text = "Просмотреть";
             this.buttonShow.UseVisualStyleBackColor = true;
@@ -178,8 +180,8 @@ namespace OOP2_2
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.8299F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 68.1701F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.32474F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.67525F));
             this.tableLayoutPanel1.Controls.Add(this.buttonShow, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.buttonDelete, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.buttonCreate, 0, 1);
@@ -202,7 +204,7 @@ namespace OOP2_2
             this.оПрограммеToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 30);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -280,7 +282,7 @@ namespace OOP2_2
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(304, 27);
+            this.bindingNavigator1.Size = new System.Drawing.Size(304, 31);
             this.bindingNavigator1.TabIndex = 8;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -370,19 +372,39 @@ namespace OOP2_2
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
             this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusBar});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 424);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(800, 26);
+            this.statusStrip1.TabIndex = 9;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusBar
+            // 
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(163, 20);
+            this.statusBar.Text = "Программа запущена";
+            // 
             // CollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "CollectionForm";
             this.Text = "CollectionForm";
             this.Load += new System.EventHandler(this.CollectionForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -391,6 +413,8 @@ namespace OOP2_2
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -415,7 +439,6 @@ namespace OOP2_2
         private System.Windows.Forms.ToolStripMenuItem сортировкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSplitButton toolStripButton1;
         private System.Windows.Forms.ToolStripSplitButton toolStripSortButton;
         private System.Windows.Forms.BindingNavigator bindingNavigator1;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
@@ -429,5 +452,8 @@ namespace OOP2_2
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel statusBar;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

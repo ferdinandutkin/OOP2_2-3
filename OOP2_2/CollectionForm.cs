@@ -58,10 +58,18 @@ namespace OOP2_2
         public DataEntryGridView dataGridView1 { get; set; }
 
 
+        void Form_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Z) 
+            {
+
+                Undo();
+                e.SuppressKeyPress = true;   
+            }
+        }
 
 
 
- 
 
 
 
@@ -73,11 +81,55 @@ namespace OOP2_2
             set;
         }
 
+
+        Stack<IList> Buffer = new();
     
         IBindingList ListedCollection
         {
             get => dataGridView1.DataSource as IBindingList;
             set => dataGridView1.DataSource = value;
+
+        }
+
+        void SaveCurrentState()
+        {
+            Buffer.Push(ListedCollection.ToListOfType(ElementType));
+        }
+        void Undo()
+        {
+
+            if (Buffer.Count == 2)
+            {
+                Buffer.Pop();
+
+                ListedCollection = Activator.CreateInstance(BindingListType, Buffer.Peek()) as IBindingList;
+
+                statusBar.Text = "Возврат к исходному";
+
+            }
+            else if (Buffer.Count > 2)
+            {
+                Buffer.Pop();
+
+                ListedCollection = Activator.CreateInstance(BindingListType, Buffer.Peek()) as IBindingList;
+
+                statusBar.Text = "Отмена последнего действия";
+
+            }
+            else if (Buffer.Count == 1)
+            {
+                ListedCollection = Activator.CreateInstance(BindingListType, Buffer.Peek()) as IBindingList;
+
+                statusBar.Text = "Попытка отмены последнего действия";
+
+            }
+
+       //     statusBar.Text += " " + Buffer.Count.ToString();
+
+            bindingNavigator1.BindingSource = null;
+            bindingNavigator1.BindingSource = new BindingSource(ListedCollection, "");
+
+
 
         }
         private void button1_Click(object sender, EventArgs e) => openFileDialog1.ShowDialog();
@@ -106,16 +158,17 @@ namespace OOP2_2
             var genericBindingList = Activator.CreateInstance(BindingListType, genericList);
             ListedCollection = genericBindingList as IBindingList;
 
-          
+
+      
 
            
             bindingNavigator1.BindingSource = new BindingSource(ListedCollection, "");
 
-            bindingNavigatorAddNewItem.Click += (_, _) => OpenLastCreated();
+            bindingNavigatorAddNewItem.Click += CreateHandler;
             bindingNavigatorAddNewItem.Click += NavigatorMovementHandler;
            
 
-            bindingNavigatorDeleteItem.Click += ButtonDelete_Click;
+            bindingNavigatorDeleteItem.Click += DeleteHandler;
             bindingNavigatorDeleteItem.Click += NavigatorMovementHandler; 
 
 
@@ -127,7 +180,7 @@ namespace OOP2_2
 
 
 
-
+            SaveCurrentState();
 
             tableLayoutPanel1.SetRowSpan(dataGridView1, 3);
             tableLayoutPanel1.Controls.Add(dataGridView1, 1, 0);
@@ -136,11 +189,12 @@ namespace OOP2_2
         }
 
 
+         
         public void NavigatorMovementHandler(object sender, EventArgs e)
         {
             dataGridView1.ClearSelection();
             int newPos = int.Parse(bindingNavigatorPositionItem.Text) - 1;
-            if (newPos >= 0 && dataGridView1.Rows[newPos] is not null)
+            if (newPos >= 0 && dataGridView1.Rows.Count > newPos && dataGridView1.Rows[newPos] is not null )
             {
                 dataGridView1.Rows[newPos].Selected = true;
             }
@@ -196,14 +250,30 @@ namespace OOP2_2
             }
            
         }
+
+
+
+     
         private void ButtonCreate_Click(object sender, EventArgs e)
         {
            
             ListedCollection.AddNew();
-            OpenLastCreated();
+            CreateHandler(sender, e);
+        } 
+
+
+        private void CreateHandler(object sender, EventArgs e)
+        {
+
+           statusBar.Text = "Добавлен новый элемент";
+           OpenLastCreated();
+            SaveCurrentState();
+      //  statusBar.Text += " " + Buffer.Count.ToString();
+        
+
         }
 
-        private void ButtonDelete_Click(object sender, EventArgs e)
+        private void DeleteHandler(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
@@ -215,7 +285,10 @@ namespace OOP2_2
 
 
             }
+            statusBar.Text = "Удален элемент";
 
+            SaveCurrentState();
+          //  statusBar.Text += " " + Buffer.Count.ToString();
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -227,16 +300,16 @@ namespace OOP2_2
               TypeDescriptor.GetProperties(propertyInfo.DeclaringType)[propertyInfo.Name];
       
 
-        private void toolStripButton2_ButtonClick(object sender, EventArgs e)
-        {
-            var propInfo = ElementType.GetProperty("Name");
-            var descriptor = GetPropertyDescriptor(propInfo);
-            ListedCollection.ApplySort(descriptor, ListSortDirection.Ascending);
+        //private void toolStripButton2_ButtonClick(object sender, EventArgs e)
+        //{
+        //    var propInfo = ElementType.GetProperty("Name");
+        //    var descriptor = GetPropertyDescriptor(propInfo);
+        //    ListedCollection.ApplySort(descriptor, ListSortDirection.Ascending);
            
             
           
           
-        }
+        //}
 
 
  
@@ -250,13 +323,14 @@ namespace OOP2_2
            
         }
 
-        private void toolStripButton1_ButtonClick(object sender, EventArgs e)
+    
+        private void toolStripButton1_Click(object sender, EventArgs e)
         {
             var queryBuilder = new QueryBuiler(GetSerializableProperties(ElementType));
             queryBuilder.FindClick += (_, _) =>
             {
                 MessageBox.Show(queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType).Count.ToString());
-                
+
                 var cf = new CollectionForm(ElementType);
                 cf.Show();
 
@@ -266,7 +340,6 @@ namespace OOP2_2
             };
 
             queryBuilder.Show();
-
 
         }
     }
