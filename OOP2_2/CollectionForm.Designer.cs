@@ -43,6 +43,7 @@ namespace OOP2_2
             this.buttonCreate = new System.Windows.Forms.Button();
             this.buttonShow = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonCreateFromFactory = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +66,8 @@ namespace OOP2_2
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusBar = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -98,7 +101,7 @@ namespace OOP2_2
             this.toolStripSortButton});
             this.toolStrip1.Location = new System.Drawing.Point(9, 28);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(145, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(145, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -108,7 +111,7 @@ namespace OOP2_2
             this.toolStripButtonFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileOpen.Image")));
             this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
-            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonFileOpen.Text = "Открыть";
             this.toolStripButtonFileOpen.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -118,14 +121,14 @@ namespace OOP2_2
             this.toolStripButtonFIleSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFIleSave.Image")));
             this.toolStripButtonFIleSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFIleSave.Name = "toolStripButtonFIleSave";
-            this.toolStripButtonFIleSave.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButtonFIleSave.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonFIleSave.Text = "Сохранить";
             this.toolStripButtonFIleSave.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // toolStripButton1
             // 
@@ -133,7 +136,7 @@ namespace OOP2_2
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
             this.toolStripButton1.Text = "Поиск";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -144,14 +147,14 @@ namespace OOP2_2
             this.toolStripSortButton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSortButton.Image")));
             this.toolStripSortButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSortButton.Name = "toolStripSortButton";
-            this.toolStripSortButton.Size = new System.Drawing.Size(39, 28);
+            this.toolStripSortButton.Size = new System.Drawing.Size(39, 24);
             this.toolStripSortButton.Text = "Сортировка";
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(3, 185);
+            this.buttonDelete.Location = new System.Drawing.Point(3, 289);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(121, 57);
+            this.buttonDelete.Size = new System.Drawing.Size(121, 55);
             this.buttonDelete.TabIndex = 5;
             this.buttonDelete.Text = "Удалить";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -159,7 +162,7 @@ namespace OOP2_2
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(3, 94);
+            this.buttonCreate.Location = new System.Drawing.Point(3, 101);
             this.buttonCreate.Name = "buttonCreate";
             this.buttonCreate.Size = new System.Drawing.Size(121, 57);
             this.buttonCreate.TabIndex = 4;
@@ -183,16 +186,29 @@ namespace OOP2_2
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.32474F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.67525F));
             this.tableLayoutPanel1.Controls.Add(this.buttonShow, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonDelete, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.buttonCreate, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.buttonDelete, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.buttonCreateFromFactory, 0, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(9, 74);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 131F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(776, 314);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 61F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(776, 347);
             this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // buttonCreateFromFactory
+            // 
+            this.buttonCreateFromFactory.Location = new System.Drawing.Point(3, 199);
+            this.buttonCreateFromFactory.Name = "buttonCreateFromFactory";
+            this.buttonCreateFromFactory.Size = new System.Drawing.Size(121, 57);
+            this.buttonCreateFromFactory.TabIndex = 6;
+            this.buttonCreateFromFactory.Text = "Создать (фабрика)";
+            this.buttonCreateFromFactory.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.buttonCreateFromFactory.UseVisualStyleBackColor = true;
+            this.buttonCreateFromFactory.Click += new System.EventHandler(this.buttonCreateFromFactory_Click);
             // 
             // menuStrip1
             // 
@@ -204,7 +220,7 @@ namespace OOP2_2
             this.оПрограммеToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(807, 28);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -282,7 +298,7 @@ namespace OOP2_2
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(304, 31);
+            this.bindingNavigator1.Size = new System.Drawing.Size(304, 27);
             this.bindingNavigator1.TabIndex = 8;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -292,13 +308,13 @@ namespace OOP2_2
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorAddNewItem.Text = "Добавить";
             // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(47, 28);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(47, 24);
             this.bindingNavigatorCountItem.Text = "из {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Общее число элементов";
             // 
@@ -308,7 +324,7 @@ namespace OOP2_2
             this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorDeleteItem.Text = "Удалить";
             // 
             // bindingNavigatorMoveFirstItem
@@ -317,7 +333,7 @@ namespace OOP2_2
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorMoveFirstItem.Text = "Переместить в начало";
             // 
             // bindingNavigatorMovePreviousItem
@@ -326,13 +342,13 @@ namespace OOP2_2
             this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorMovePreviousItem.Text = "Переместить назад";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 31);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 27);
             // 
             // bindingNavigatorPositionItem
             // 
@@ -347,7 +363,7 @@ namespace OOP2_2
             // bindingNavigatorSeparator1
             // 
             this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 31);
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // bindingNavigatorMoveNextItem
             // 
@@ -355,7 +371,7 @@ namespace OOP2_2
             this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorMoveNextItem.Text = "Переместить вперед";
             // 
             // bindingNavigatorMoveLastItem
@@ -364,22 +380,23 @@ namespace OOP2_2
             this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorMoveLastItem.Text = "Переместить в конец";
             // 
             // bindingNavigatorSeparator2
             // 
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 31);
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 424);
+            this.statusBar,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 418);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(807, 26);
             this.statusStrip1.TabIndex = 9;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -389,11 +406,23 @@ namespace OOP2_2
             this.statusBar.Size = new System.Drawing.Size(163, 20);
             this.statusBar.Text = "Программа запущена";
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(370, 4, 0, 2);
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 20);
+            // 
             // CollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(807, 444);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -419,6 +448,9 @@ namespace OOP2_2
             this.PerformLayout();
 
         }
+
+
+ 
 
         #endregion
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -455,5 +487,8 @@ namespace OOP2_2
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusBar;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.Button buttonCreateFromFactory;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

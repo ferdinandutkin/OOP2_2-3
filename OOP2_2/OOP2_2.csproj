@@ -132,6 +132,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentTableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ArgumentTableControl.Designer.cs">
+      <DependentUpon>ArgumentTableControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,11 @@
     <Compile Include="DataEntryGridView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="FactoryAttributes.cs" />
+    <Compile Include="FactoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FactoryForm.Designer.cs" />
     <Compile Include="LettersOnlyValidatingTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -171,7 +182,8 @@
     <Compile Include="QueryControlListElement.Designer.cs">
       <DependentUpon>QueryControlListElement.cs</DependentUpon>
     </Compile>
-    <Compile Include="RowComparer.cs" />
+    <Compile Include="Reflector.cs" />
+    <Compile Include="Singleton.cs" />
     <Compile Include="ValidatingEnumComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -197,6 +209,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DataEntryForm1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="FactoryForm.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

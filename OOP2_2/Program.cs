@@ -16,16 +16,89 @@ namespace OOP2_2
         
 
 
-        public enum FileExtension { doc, docx, pdf, djvu, txt};
+        public enum FileExtensions { docx, pdf, djvu, fb2};
 
-        class ELib
+
+
+        public enum BookGenres { Fantasy, Detective, Classics, Horror}
+
+
+        public abstract class BookFactory
+        {
+            [FactoryMethod(Name = ".pdf книга")]
+            public abstract Book CreatePDFBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors);
+
+            [FactoryMethod(Name = ".docx книга")]
+            public abstract Book CreateDOCXBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors);
+
+            [FactoryMethod(Name = ".djvu книга")]
+            public abstract Book CreateDJVUBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors);
+
+        }
+
+
+
+        public abstract class GenreBookFactory : BookFactory
+        {
+            protected Book CreateBookWithTargetGenre(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors, FileExtensions extension)
+                => new Book() { Name = name, FileSize = fileSize, Publisher = publisher, Authors = authors, Genre = TargetGenre, Extension = extension };
+
+
+            protected abstract BookGenres TargetGenre { get; set; }
+
+
+            public override Book CreatePDFBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors)
+                => CreateBookWithTargetGenre(name, fileSize, publisher, authors, FileExtensions.pdf);
+         
+            public override Book CreateDOCXBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors) 
+                => CreateBookWithTargetGenre(name, fileSize, publisher, authors, FileExtensions.docx);
+            public override Book CreateDJVUBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors)
+                => CreateBookWithTargetGenre(name, fileSize, publisher, authors, FileExtensions.djvu);
+        }
+
+
+
+        [FactoryClass("Фэнтези книги")]
+        public class FantasyBookFactory : GenreBookFactory
+        {
+            protected override BookGenres TargetGenre { get; set; } = BookGenres.Fantasy;  
+         
+        }
+
+
+        [FactoryClass("Детективные книги")]
+        public class DetectiveBookFactory : GenreBookFactory
+        {
+            protected override BookGenres TargetGenre { get; set; } = BookGenres.Detective;
+
+        }
+
+
+        [FactoryClass("Классическая литература")]
+        public class ClassicBookFactory : GenreBookFactory
+        {
+            protected override BookGenres TargetGenre { get; set; } = BookGenres.Classics;
+
+        }
+
+        [FactoryClass("Книги ужасов")]
+        public class HorrorBookFactory : GenreBookFactory
+        {
+            protected override BookGenres TargetGenre { get; set; } = BookGenres.Horror;
+
+        }
+
+
+        public class Book
         {
 
-            public ELib()
+            public Book()
             {
 
             }
-            public FileExtension Extension { get; set; }
+
+            public BookGenres Genre { get; set; }
+            public FileExtensions Extension { get; set; }
             public int FileSize { get; set; }
             public string Name { get; set; } = "";
 
@@ -103,7 +176,7 @@ namespace OOP2_2
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CollectionForm(typeof(Person)));
+            Application.Run(new CollectionForm(typeof(Book), typeof(BookFactory)));
         }
     }
 }

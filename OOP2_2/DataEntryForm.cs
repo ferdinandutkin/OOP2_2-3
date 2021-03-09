@@ -15,54 +15,12 @@ namespace OOP2_2
     public partial class DataEntryForm : Form
     {
 
-        public static object GetPropertyValueByPath(object source, string path)
-        {
-
-            if (path is null) throw new ArgumentNullException(nameof(path));
-
-            if (path == "") return source;
-
-            Type currentType = source.GetType(); 
-            foreach (var prop in path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                PropertyInfo propInfo = currentType.GetProperty(prop);
-                if (propInfo is not null)
-                {
-                    source = propInfo.GetValue(source, null);
-                    currentType = propInfo.PropertyType;
-                }
-                else throw new ArgumentException("path");
-            }
-            return source;
-        }
-
-        public static Type GetPropertyTypeByPath(Type sourceType, string path)
-        {
-            if (path is null) throw new ArgumentNullException(nameof(path));
-
-            if (path == "") return sourceType;
-
-            Type currentType = sourceType;
-
-            foreach (string pathEl in path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-               currentType = currentType.GetProperty(pathEl).PropertyType;
-            }
-
-         
-            return currentType;
-        }
-
 
         public object Source { get; private set; }
 
         public string PropertyPath { get; private set; }
 
-  
 
-
-     
-        
         public DataEntryForm(object source, string propertyPath = "")
         {
 
@@ -84,52 +42,44 @@ namespace OOP2_2
             GetText = () => labeText.Text;
             SetText = text => labeText.Text = text;
 
-
-
-          
             Text = PropertyPath;
 
             AutoSize = true;
             AutoScroll = true;
 
-            
-
-
-
 
 
 
             Fill();
-      
-            
+
+
         }
 
-        public IEnumerable<PropertyInfo> GetSerializableProperties(Type type) =>
-           type.GetProperties().Where(p => p.GetSetMethod() is not null && p.GetGetMethod() is not null);
 
 
 
 
-   
-        void Fill ()
+
+
+        void Fill()
         {
 
-           
-            
 
 
-            Type objType = GetPropertyTypeByPath(Source.GetType(), PropertyPath);
 
-            
+
+            Type objType = Reflector.GetPropertyTypeByPath(Source.GetType(), PropertyPath);
+
+
 
 
             if (typeof(IList).IsAssignableFrom(objType) && objType != typeof(string))
             {
 
-             
-               
-                object source = GetPropertyValueByPath(Source, PropertyPath);
-             
+
+
+                object source = Reflector.GetPropertyValueByPath(Source, PropertyPath);
+
 
                 Type genericType = objType.IsArray ? objType.GetElementType() : objType.GetGenericArguments().First();
 
@@ -149,29 +99,29 @@ namespace OOP2_2
 
                 if (genericType.IsPrimitive)
                 {
-              
 
 
 
-                    
+
+
                     Type genericListDataSource = (typeof(ListDataSource<>).MakeGenericType(genericType));
                     object listDataSource = Activator.CreateInstance(genericListDataSource, bindingList);
-                   
+
                     dataEntryGridView.DataSource = listDataSource;
-             
+
 
                 }
                 else
                 {
-                     
-                 
-                 
+
+
+
                     dataEntryGridView.DataSource = bindingList;
-                  
+
 
                 }
                 table.Controls.Add(dataEntryGridView);
-                
+
 
 
 
@@ -182,26 +132,26 @@ namespace OOP2_2
             }
 
 
-           
 
-            foreach (var prop in GetSerializableProperties(objType))
+
+            foreach (var prop in Reflector.GetAllPublicProperties(objType))
             {
 
-               
- 
+
+
                 var propertyType = prop.PropertyType;
                 var propName = prop.Name;
                 var currentPropPath = string.IsNullOrEmpty(PropertyPath) ? propName : $"{PropertyPath}.{propName}";
 
                 Add(propName);
 
-             
+
                 Control control;
-             
-               
+
+
                 if (propertyType.IsPrimitive)
                 {
-                  
+
                     if (propertyType == typeof(bool))
                     {
                         control = new CheckBox();
@@ -212,7 +162,7 @@ namespace OOP2_2
                         control = new ValidatingTextBox(propertyType);
                         control.DataBindings.Add(new(nameof(ValidatingTextBox.Value), Source, currentPropPath));
                     }
-                   
+
 
 
                 }
@@ -225,20 +175,20 @@ namespace OOP2_2
                 else if (propertyType == typeof(DateTime))
                 {
                     control = new DateTimePicker();
-                    control.DataBindings.Add(new (nameof(DateTimePicker.Value), Source, currentPropPath));
+                    control.DataBindings.Add(new(nameof(DateTimePicker.Value), Source, currentPropPath));
 
 
                 }
                 else if (propertyType == typeof(string))
                 {
-                    control = new LettersOnlyValidatingTextBox();
-                    control.DataBindings.Add(new Binding(nameof(LettersOnlyValidatingTextBox.Text), Source, currentPropPath));   
+                    control = new TextBox();
+                    control.DataBindings.Add(new Binding(nameof(TextBox.Text), Source, currentPropPath));
                 }
-                
+
                 else
                 {
-                    
-                    control = new Button() { Text = "..." , Size = new (40, 20)};
+
+                    control = new Button() { Text = "...", Size = new(40, 20) };
                     control.Click += (_, _) => new DataEntryForm(Source, currentPropPath).Show();
                 }
                 Add(control);
@@ -247,12 +197,12 @@ namespace OOP2_2
 
             }
 
-         
+
 
 
         }
 
-      
+
         private Func<string> GetText = () => string.Empty;
         private Action<string> SetText = (_) => { };
         public override string Text
@@ -288,7 +238,7 @@ namespace OOP2_2
             }
         }
 
-        
+
         private void Label1_Click(object sender, EventArgs e) =>
             Close();
 
@@ -306,7 +256,7 @@ namespace OOP2_2
 
         private void Label1_MouseLeave(object sender, EventArgs e) => (sender as Label).ForeColor = Color.DarkRed;
 
-        
+
 
     }
 }

@@ -20,14 +20,18 @@ namespace OOP2_2
 {
     public partial class CollectionForm : Form
     {
-        public IEnumerable<PropertyInfo> GetSerializableProperties(Type type) =>
-          type.GetProperties().Where(p => p.GetSetMethod() is not null && p.GetGetMethod() is not null);
 
 
-        public IEnumerable<PropertyInfo> GetNestedSerializableProperties(Type type) =>
-            GetSerializableProperties(type)
-            .Where(prop => !prop.PropertyType.IsPrimitive && !prop.PropertyType.IsEnum &&
-            prop.PropertyType != typeof(DateTime) && prop.PropertyType != typeof(string));
+        void ApplySetting()
+        {
+            var settings = SingletonSettings.GetInstance();
+
+            this.BackColor = settings.BackColor;
+            this.ForeColor = settings.FontColor;
+            this.Font = new(settings.FontFamily, settings.FontSize);
+            this.ClientSize = new Size(settings.FormWidth, settings.FormHeight);
+
+        }
 
         Type ElementType;
 
@@ -36,17 +40,28 @@ namespace OOP2_2
         Type ListType => typeof(List<>).MakeGenericType(ElementType);
 
 
+        Type AbstractFactoryType;
+
+
         public CollectionForm(Type elementType)
         {
             ElementType = elementType;
             InitializeComponent();
-            toolStripSortButton.DropDownItems.AddRange(GetSerializableProperties(ElementType).Select(prop => {
+            ApplySetting();
+            toolStripSortButton.DropDownItems.AddRange(Reflector.GetAllPublicProperties(ElementType).Select(prop => {
                 var button = new ToolStripButton() { Text = prop.Name };
                 button.Click += SortSelected;
                 return button;
                 }).ToArray());;
 
+       
+
         }
+
+        public CollectionForm(Type elementType, Type abstractFactoryType) : this(elementType) => AbstractFactoryType = abstractFactoryType;
+
+
+
 
         private void SortSelected(object sender, EventArgs e)
         {
@@ -62,7 +77,6 @@ namespace OOP2_2
         {
             if (e.Control && e.KeyCode == Keys.Z) 
             {
-
                 Undo();
                 e.SuppressKeyPress = true;   
             }
@@ -139,6 +153,8 @@ namespace OOP2_2
         {
 
 
+            buttonCreateFromFactory.Enabled = AbstractFactoryType is not null;
+
             dataGridView1 = new DataEntryGridView()
             {
                 Dock = DockStyle.Fill,
@@ -182,7 +198,7 @@ namespace OOP2_2
 
             SaveCurrentState();
 
-            tableLayoutPanel1.SetRowSpan(dataGridView1, 3);
+            tableLayoutPanel1.SetRowSpan(dataGridView1, 4);
             tableLayoutPanel1.Controls.Add(dataGridView1, 1, 0);
 
             
@@ -267,10 +283,9 @@ namespace OOP2_2
 
            statusBar.Text = "Добавлен новый элемент";
            OpenLastCreated();
-            SaveCurrentState();
-      //  statusBar.Text += " " + Buffer.Count.ToString();
-        
+           SaveCurrentState();
 
+       
         }
 
         private void DeleteHandler(object sender, EventArgs e)
@@ -288,7 +303,6 @@ namespace OOP2_2
             statusBar.Text = "Удален элемент";
 
             SaveCurrentState();
-          //  statusBar.Text += " " + Buffer.Count.ToString();
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -299,17 +313,6 @@ namespace OOP2_2
         public static PropertyDescriptor GetPropertyDescriptor(PropertyInfo propertyInfo) =>
               TypeDescriptor.GetProperties(propertyInfo.DeclaringType)[propertyInfo.Name];
       
-
-        //private void toolStripButton2_ButtonClick(object sender, EventArgs e)
-        //{
-        //    var propInfo = ElementType.GetProperty("Name");
-        //    var descriptor = GetPropertyDescriptor(propInfo);
-        //    ListedCollection.ApplySort(descriptor, ListSortDirection.Ascending);
-           
-            
-          
-          
-        //}
 
 
  
@@ -326,10 +329,10 @@ namespace OOP2_2
     
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            var queryBuilder = new QueryBuiler(GetSerializableProperties(ElementType));
+            var queryBuilder = new QueryBuiler(Reflector.GetAllPublicProperties(ElementType));
             queryBuilder.FindClick += (_, _) =>
             {
-                MessageBox.Show(queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType).Count.ToString());
+               // MessageBox.Show(queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType).Count.ToString());
 
                 var cf = new CollectionForm(ElementType);
                 cf.Show();
@@ -342,6 +345,28 @@ namespace OOP2_2
             queryBuilder.Show();
 
         }
+
+
+        private void ObjectCreationHandler(object sender, object obj) => ListedCollection.Add(obj);
+      
+        private void buttonCreateFromFactory_Click(object sender, EventArgs e)
+        {
+            Type factoryFormType = typeof(FactoryForm<>).MakeGenericType(AbstractFactoryType);
+
+            var creationEvet = factoryFormType.GetEvent("ObjectCreated");
+
+
+            Form factoryForm = Activator.CreateInstance(factoryFormType) as Form;
+
+
+            Delegate handler = Delegate.CreateDelegate(creationEvet.EventHandlerType, this, nameof(ObjectCreationHandler));
+            creationEvet.AddEventHandler(factoryForm, handler);
+            factoryForm.Show();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e) => toolStripStatusLabel1.Text = DateTime.Now.ToString("G");
+
+      
     }
 }
  

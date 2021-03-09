@@ -8,26 +8,20 @@ using System.Windows.Forms;
 
 namespace OOP2_2
 {
-
-
-
-
-
-    public class DataEntryGridView : DataGridView
+    
+    public partial class DataEntryGridView : DataGridView
     {
         public event Action<DataGridView, DataGridViewCellEventArgs> CellButtonClick;
 
-        public IEnumerable<PropertyInfo> GetSerializableProperties(Type type) =>
-     type.GetProperties().Where(p => p.GetSetMethod() is not null && p.GetGetMethod() is not null);
+
 
         public IEnumerable<PropertyInfo> GetNestedSerializableProperties(Type type) =>
-            GetSerializableProperties(type)
+            Reflector.GetAllPublicProperties(type)
             .Where(prop => IsNestedSerializableType(prop.PropertyType));
 
 
-        private static bool IsNestedSerializableType(Type type) => type is null
-                ? false
-                : !type.IsPrimitive && !type.IsEnum &&
+        private static bool IsNestedSerializableType(Type type) => type is not null
+&& !type.IsPrimitive && !type.IsEnum &&
             type != typeof(DateTime) && type != typeof(string);
 
 
@@ -35,7 +29,7 @@ namespace OOP2_2
         public DataEntryGridView()
         {
             BackgroundColor = SystemColors.Control;
-            CellButtonClick +=  (_, args) =>
+            CellButtonClick += (_, args) =>
             {
                 var path = Columns[args.ColumnIndex].DataPropertyName;
 
@@ -44,22 +38,22 @@ namespace OOP2_2
 
             };
         }
-       
 
-        
+
+
 
 
         protected override void OnCellClick(DataGridViewCellEventArgs e)
         {
-          
-            if (e.RowIndex >= 0 && 
-                e.RowIndex < this.RowCount - 1 &&
+
+            if (e.RowIndex >= 0 &&
+                e.RowIndex < RowCount - 1 &&
                 e.ColumnIndex > -1 &&
                 Columns[e.ColumnIndex] is DataGridViewButtonColumn)
                 CellButtonClick?.Invoke(this, e);
             base.OnCellClick(e);
 
-           
+
         }
 
 
@@ -86,7 +80,7 @@ namespace OOP2_2
 
             if ((e.Exception) is ConstraintException)
             {
-                
+
                 Rows[e.RowIndex].ErrorText = "an error";
                 Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "an error";
 
@@ -99,38 +93,38 @@ namespace OOP2_2
         {
             var type = DataSource.GetType().GetGenericArguments().First();
 
-            foreach (var name in GetSerializableProperties(type).Select(p => p.Name).Except(Columns.Cast<DataGridViewColumn>().Select(c => c.DataPropertyName)))
+            foreach (var name in Reflector.GetAllPublicProperties(type).Select(p => p.Name).Except(Columns.Cast<DataGridViewColumn>().Select(c => c.DataPropertyName)))
             {
                 Columns.Add(new DataGridViewButtonColumn()
                 {
-                   
+
                     HeaderText = name,
                     Text = "...",
                     UseColumnTextForButtonValue = true,
                     DataPropertyName = name
                 });
             }
-             
-            
-          
+
+
+
         }
         protected override void OnColumnAdded(DataGridViewColumnEventArgs e)
         {
 
-    
+
             if (e.Column is not DataGridViewButtonColumn && IsNestedSerializableType(e.Column.ValueType))
             {
-               
-                    Columns.RemoveAt(e.Column.Index);
-                    Columns.Insert(e.Column.Index, new DataGridViewButtonColumn()
-                    {
-                        HeaderText = e.Column.HeaderText,
-                        Text = "...",
-                        UseColumnTextForButtonValue = true,
-                        DataPropertyName = e.Column.DataPropertyName
 
-                    });
-                
+                Columns.RemoveAt(e.Column.Index);
+                Columns.Insert(e.Column.Index, new DataGridViewButtonColumn()
+                {
+                    HeaderText = e.Column.HeaderText,
+                    Text = "...",
+                    UseColumnTextForButtonValue = true,
+                    DataPropertyName = e.Column.DataPropertyName
+
+                });
+
 
 
             }
@@ -138,13 +132,11 @@ namespace OOP2_2
             {
                 base.OnColumnAdded(e);
             }
-          
+
         }
 
 
     }
-   
 
-    
 
 }
