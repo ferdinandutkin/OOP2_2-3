@@ -104,7 +104,7 @@ namespace OOP2_2
 
 
 
-                    Type genericListDataSource = (typeof(ListDataSource<>).MakeGenericType(genericType));
+                    Type genericListDataSource = (typeof(BindingListSourceAdapter<>).MakeGenericType(genericType));
                     object listDataSource = Activator.CreateInstance(genericListDataSource, bindingList);
 
                     dataEntryGridView.DataSource = listDataSource;

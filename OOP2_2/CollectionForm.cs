@@ -48,13 +48,14 @@ namespace OOP2_2
             ElementType = elementType;
             InitializeComponent();
             ApplySetting();
-            toolStripSortButton.DropDownItems.AddRange(Reflector.GetAllPublicProperties(ElementType).Select(prop => {
+            toolStripSortButton.DropDownItems.AddRange(Reflector.GetAllPublicProperties(ElementType).Select(prop =>
+            {
                 var button = new ToolStripButton() { Text = prop.Name };
                 button.Click += SortSelected;
                 return button;
-                }).ToArray());;
+            }).ToArray()); ;
 
-       
+
 
         }
 
@@ -65,8 +66,8 @@ namespace OOP2_2
 
         private void SortSelected(object sender, EventArgs e)
         {
-            
-       
+
+
             SortByPropName((sender as ToolStripItem).Text, ListSortDirection.Ascending);
         }
 
@@ -75,10 +76,10 @@ namespace OOP2_2
 
         void Form_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.Z) 
+            if (e.Control && e.KeyCode == Keys.Z)
             {
                 Undo();
-                e.SuppressKeyPress = true;   
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -97,7 +98,7 @@ namespace OOP2_2
 
 
         Stack<IList> Buffer = new();
-    
+
         IBindingList ListedCollection
         {
             get => dataGridView1.DataSource as IBindingList;
@@ -138,7 +139,7 @@ namespace OOP2_2
 
             }
 
-       //     statusBar.Text += " " + Buffer.Count.ToString();
+            //     statusBar.Text += " " + Buffer.Count.ToString();
 
             bindingNavigator1.BindingSource = null;
             bindingNavigator1.BindingSource = new BindingSource(ListedCollection, "");
@@ -147,7 +148,7 @@ namespace OOP2_2
 
         }
         private void button1_Click(object sender, EventArgs e) => openFileDialog1.ShowDialog();
-       
+
 
         private void CollectionForm_Load(object sender, EventArgs e)
         {
@@ -158,11 +159,11 @@ namespace OOP2_2
             dataGridView1 = new DataEntryGridView()
             {
                 Dock = DockStyle.Fill,
-                
+
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-           
+
 
 
             var genericList = Activator.CreateInstance(ListType);
@@ -170,22 +171,22 @@ namespace OOP2_2
 
             List = genericList as IList;
             List.Add(Activator.CreateInstance(ElementType));
-          
+
             var genericBindingList = Activator.CreateInstance(BindingListType, genericList);
             ListedCollection = genericBindingList as IBindingList;
 
 
-      
 
-           
+
+
             bindingNavigator1.BindingSource = new BindingSource(ListedCollection, "");
 
             bindingNavigatorAddNewItem.Click += CreateHandler;
             bindingNavigatorAddNewItem.Click += NavigatorMovementHandler;
-           
+
 
             bindingNavigatorDeleteItem.Click += DeleteHandler;
-            bindingNavigatorDeleteItem.Click += NavigatorMovementHandler; 
+            bindingNavigatorDeleteItem.Click += NavigatorMovementHandler;
 
 
             bindingNavigatorMoveFirstItem.Click += NavigatorMovementHandler;
@@ -201,24 +202,24 @@ namespace OOP2_2
             tableLayoutPanel1.SetRowSpan(dataGridView1, 4);
             tableLayoutPanel1.Controls.Add(dataGridView1, 1, 0);
 
-            
+
         }
 
 
-         
+
         public void NavigatorMovementHandler(object sender, EventArgs e)
         {
             dataGridView1.ClearSelection();
             int newPos = int.Parse(bindingNavigatorPositionItem.Text) - 1;
-            if (newPos >= 0 && dataGridView1.Rows.Count > newPos && dataGridView1.Rows[newPos] is not null )
+            if (newPos >= 0 && dataGridView1.Rows.Count > newPos && dataGridView1.Rows[newPos] is not null)
             {
                 dataGridView1.Rows[newPos].Selected = true;
             }
-      
+
         }
         private async void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            
+
             using var file = File.CreateText(saveFileDialog1.FileName);
 
             await Task.Run(() => new JsonSerializer().Serialize(file, ListedCollection));
@@ -235,9 +236,9 @@ namespace OOP2_2
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e) => saveFileDialog1.ShowDialog();
-      
-        
-       
+
+
+
         private void ButtonOpen_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
@@ -246,13 +247,13 @@ namespace OOP2_2
                     continue;
                 else
                 {
-                     
+
                     new DataEntryForm(row.DataBoundItem).Show();
                 }
-               
+
             }
- 
-           
+
+
         }
 
         void OpenLastCreated()
@@ -264,28 +265,28 @@ namespace OOP2_2
                 def.FormClosed += (_, _) => dataGridView1.Refresh();
                 def.Show();
             }
-           
+
         }
 
 
 
-     
+
         private void ButtonCreate_Click(object sender, EventArgs e)
         {
-           
+
             ListedCollection.AddNew();
             CreateHandler(sender, e);
-        } 
+        }
 
 
         private void CreateHandler(object sender, EventArgs e)
         {
 
-           statusBar.Text = "Добавлен новый элемент";
-           OpenLastCreated();
-           SaveCurrentState();
+            statusBar.Text = "Добавлен новый элемент";
+            OpenLastCreated();
+            SaveCurrentState();
 
-       
+
         }
 
         private void DeleteHandler(object sender, EventArgs e)
@@ -312,27 +313,27 @@ namespace OOP2_2
 
         public static PropertyDescriptor GetPropertyDescriptor(PropertyInfo propertyInfo) =>
               TypeDescriptor.GetProperties(propertyInfo.DeclaringType)[propertyInfo.Name];
-      
 
 
- 
-        
+
+
+
 
         private void SortByPropName(string name, ListSortDirection sortDirection)
         {
             var propInfo = ElementType.GetProperty(name);
             var descriptor = GetPropertyDescriptor(propInfo);
             ListedCollection.ApplySort(descriptor, sortDirection);
-           
+
         }
 
-    
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             var queryBuilder = new QueryBuiler(Reflector.GetAllPublicProperties(ElementType));
             queryBuilder.FindClick += (_, _) =>
             {
-               // MessageBox.Show(queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType).Count.ToString());
+                // MessageBox.Show(queryBuilder.ApplyQuery(ListedCollection).ToListOfType(ElementType).Count.ToString());
 
                 var cf = new CollectionForm(ElementType);
                 cf.Show();
@@ -348,7 +349,7 @@ namespace OOP2_2
 
 
         private void ObjectCreationHandler(object sender, object obj) => ListedCollection.Add(obj);
-      
+
         private void buttonCreateFromFactory_Click(object sender, EventArgs e)
         {
             Type factoryFormType = typeof(FactoryForm<>).MakeGenericType(AbstractFactoryType);
@@ -366,7 +367,6 @@ namespace OOP2_2
 
         private void timer1_Tick(object sender, EventArgs e) => toolStripStatusLabel1.Text = DateTime.Now.ToString("G");
 
-      
+
     }
 }
- 

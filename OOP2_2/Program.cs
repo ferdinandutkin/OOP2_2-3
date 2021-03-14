@@ -6,21 +6,21 @@ using System.Windows.Forms;
 
 namespace OOP2_2
 {
-    
+   
     static class Program
     {
         public enum Occupation
         {
-           Duck, Quack
+            Duck, Quack
         }
-        
-
-
-        public enum FileExtensions { docx, pdf, djvu, fb2};
 
 
 
-        public enum BookGenres { Fantasy, Detective, Classics, Horror}
+        public enum FileExtensions { docx, pdf, djvu, fb2 };
+
+
+
+        public enum BookGenres { Fantasy, Detective, Classics, Horror }
 
 
         public abstract class BookFactory
@@ -42,15 +42,18 @@ namespace OOP2_2
         {
             protected Book CreateBookWithTargetGenre(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors, FileExtensions extension)
                 => new Book() { Name = name, FileSize = fileSize, Publisher = publisher, Authors = authors, Genre = TargetGenre, Extension = extension };
+            /*шаблонный метод
+             * сам не переопределяется но его часть (свойство TargetGenre) переопределеяется наследниками
+             */
 
 
-            protected abstract BookGenres TargetGenre { get; set; }
+            protected abstract BookGenres TargetGenre { get; }
 
 
             public override Book CreatePDFBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors)
                 => CreateBookWithTargetGenre(name, fileSize, publisher, authors, FileExtensions.pdf);
-         
-            public override Book CreateDOCXBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors) 
+
+            public override Book CreateDOCXBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors)
                 => CreateBookWithTargetGenre(name, fileSize, publisher, authors, FileExtensions.docx);
             public override Book CreateDJVUBook(string name, int fileSize, Book.PublisherInfo publisher, List<Book.AuthorInfo> authors)
                 => CreateBookWithTargetGenre(name, fileSize, publisher, authors, FileExtensions.djvu);
@@ -61,15 +64,15 @@ namespace OOP2_2
         [FactoryClass("Фэнтези книги")]
         public class FantasyBookFactory : GenreBookFactory
         {
-            protected override BookGenres TargetGenre { get; set; } = BookGenres.Fantasy;  
-         
+            protected override BookGenres TargetGenre => BookGenres.Fantasy;
+
         }
 
 
         [FactoryClass("Детективные книги")]
         public class DetectiveBookFactory : GenreBookFactory
         {
-            protected override BookGenres TargetGenre { get; set; } = BookGenres.Detective;
+            protected override BookGenres TargetGenre => BookGenres.Detective;
 
         }
 
@@ -77,19 +80,28 @@ namespace OOP2_2
         [FactoryClass("Классическая литература")]
         public class ClassicBookFactory : GenreBookFactory
         {
-            protected override BookGenres TargetGenre { get; set; } = BookGenres.Classics;
+            protected override BookGenres TargetGenre => BookGenres.Classics;
 
         }
 
         [FactoryClass("Книги ужасов")]
         public class HorrorBookFactory : GenreBookFactory
         {
-            protected override BookGenres TargetGenre { get; set; } = BookGenres.Horror;
+            protected override BookGenres TargetGenre => BookGenres.Horror;
 
         }
 
 
-        public class Book
+
+
+
+        public abstract class DeepCopyablePrototype
+        {
+           public abstract DeepCopyablePrototype CreateDeepCopy();
+
+        }
+
+        public class Book : DeepCopyablePrototype
         {
 
             public Book()
@@ -115,11 +127,11 @@ namespace OOP2_2
 
             }
 
-       
+
 
             public class PublisherInfo
             {
-                 public PublisherInfo()
+                public PublisherInfo()
                 {
 
                 }
@@ -133,6 +145,17 @@ namespace OOP2_2
 
             public PublisherInfo Publisher { get; set; } = new();
             public List<AuthorInfo> Authors { get; set; } = new List<AuthorInfo>() { new(), new(), new(), new(), new() };
+
+            public override DeepCopyablePrototype CreateDeepCopy()
+                => new Book() { 
+                    Genre = Genre, 
+                    Authors = Authors.ToList(),
+                    Extension = Extension,
+                    FileSize = FileSize,
+                    Publisher = new PublisherInfo() { FoundationYear = Publisher.FoundationYear, Name = Publisher.Name.ToString(), Private = Publisher.Private } 
+                };
+
+            
         }
 
         public class Person
@@ -149,25 +172,25 @@ namespace OOP2_2
                 public bool b { get; set; } = default;
 
                 public Test2 Field3 { get; set; } = new();
-                public string Field1 { get; set; }  = string.Empty;
-                public List<int> ListArr { get; set; } = new List<int>(){ 1, 4, 5, 6, 3, 2, 45 };
+                public string Field1 { get; set; } = string.Empty;
+                public List<int> ListArr { get; set; } = new List<int>() { 1, 4, 5, 6, 3, 2, 45 };
 
                 public string Field2 { get; set; } = string.Empty;
             }
 
-         
-         public Test TestProp { get; set; } = new();
+
+            public Test TestProp { get; set; } = new();
             public Occupation Occupation { get; set; }
-         
+
             public int Age { get; set; } = default;
             public string Name { get; set; } = string.Empty;
-        
+
         }
 
 
 
 
-      
+
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>

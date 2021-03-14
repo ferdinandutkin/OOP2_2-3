@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace OOP2_2
 {
-   public partial class ValidatingTextBox : TextBox
+    public partial class ValidatingTextBox : TextBox
     {
         protected Type type;
 
@@ -32,14 +32,14 @@ namespace OOP2_2
         {
             this.type = type;
         }
-       
+
         protected override void OnTextChanged(EventArgs e)
         {
-            
+
             ForeColor = IsValid ? Color.Black : Color.Red;
             base.OnTextChanged(e);
         }
 
-      
+
     }
 }

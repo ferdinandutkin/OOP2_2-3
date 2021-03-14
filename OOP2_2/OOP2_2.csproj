@@ -182,6 +182,7 @@
     <Compile Include="QueryControlListElement.Designer.cs">
       <DependentUpon>QueryControlListElement.cs</DependentUpon>
     </Compile>
+    <Compile Include="QueryTree.cs" />
     <Compile Include="Reflector.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="ValidatingEnumComboBox.cs">

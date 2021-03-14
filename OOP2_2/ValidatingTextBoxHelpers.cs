@@ -1,15 +1,15 @@
 ﻿using System;
- 
+
 
 namespace OOP2_2
 {
     public partial class ValidatingTextBox
     {
-    
+
         private bool CanConvert(string value, Type type) =>
            typeof(string) == type || TryChangeType(value, type, out _);
 
-    
+
         private bool TryChangeType(string value, Type type, out object val)
         {
             try

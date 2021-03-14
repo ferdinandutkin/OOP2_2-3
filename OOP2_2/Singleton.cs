@@ -36,7 +36,7 @@ namespace OOP2_2
         }
 
 
-  
+
         public string FontFamily { get; set; }
         public Color BackColor { get; set; }
         public Color FontColor { get; set; }

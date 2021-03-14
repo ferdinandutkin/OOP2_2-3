@@ -12,28 +12,28 @@ namespace OOP2_2
     {
         private Type type;
 
-      
+
 
         private string[] names;
 
 
-        public object Value 
-        { 
+        public object Value
+        {
             get => Enum.IsDefined(type, Text) ? Enum.Parse(type, Text) : null;
-            
-            set 
+
+            set
             {
                 if (Enum.IsDefined(type, value))
                 {
                     Text = Enum.GetName(type, value);
                 }
-              
+
             }
-               
+
         }
-        
+
         bool IsValid => names.Contains(Text);
-       
+
         public ValidatingEnumComboBox(Type type)
         {
             if (!type.IsEnum)
@@ -52,8 +52,8 @@ namespace OOP2_2
 
 
 
-      
-    
+
+
 
     }
 }

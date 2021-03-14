@@ -32,140 +32,143 @@ namespace OOP2_2
 
         }
 
-       
-      
+
+
         private void RemoveRow(int rowIndex)
+        {
+            if (rowIndex >= tableLayoutPanel1.RowCount)
             {
-                if (rowIndex >= tableLayoutPanel1.RowCount)
-                {
-                    return;
-                }
-
-               
-                for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
-                {
-                    var control = tableLayoutPanel1.GetControlFromPosition(i, rowIndex);
-                    tableLayoutPanel1.Controls.Remove(control);
-                }
-
-                
-                for (int i = rowIndex + 1; i < tableLayoutPanel1.RowCount; i++)
-                {
-                    for (int j = 0; j < tableLayoutPanel1.ColumnCount; j++)
-                    {
-                        var control = tableLayoutPanel1.GetControlFromPosition(j, i);
-                        if (control is not null)
-                        {
-                            tableLayoutPanel1.SetRow(control, i - 1);
-                        }
-                    }
-                }
-
-                var removeStyle = tableLayoutPanel1.RowCount - 1;
-
-                if (tableLayoutPanel1.RowStyles.Count > removeStyle)
-                    tableLayoutPanel1.RowStyles.RemoveAt(removeStyle);
-
-                tableLayoutPanel1.RowCount--;
+                return;
             }
 
 
-      
-
-        // ComboBoxItem[] types = { "Полное совпадение", "Подстрока", "Диапазон" };
-        Regex RegexFromControl(QueryControlListElement queryControlListElement) //контракт валидный
-        {
-
-            var regexType = queryControlListElement.comboBoxRegExType.SelectedItem as QueryControlListElement.ComboBoxItem;
-
-            var regexValue = Regex.Escape(queryControlListElement.textBoxValue.Text);
-
-            var param = queryControlListElement.textBoxParams.Text;
-
-
-         
-
-            return new(regexType.ToString() switch
+            for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
             {
-                "Полное совпадение" => regexValue,
-                "Подстрока" when int.TryParse(param, out int idx) => $"^.{{{idx - 1}}}{regexValue}.*",
-                "Подстрока" => $".*{regexValue}.*",
-                "Диапазон" when int.TryParse(param, out int idx) => $"^.{{{idx - 1}}}[{regexValue}].*",
-                "Диапазон" => $".*[{regexValue}].*",
-                _ => ""
-            });
-
-         
+                var control = tableLayoutPanel1.GetControlFromPosition(i, rowIndex);
+                tableLayoutPanel1.Controls.Remove(control);
+            }
 
 
+            for (int i = rowIndex + 1; i < tableLayoutPanel1.RowCount; i++)
+            {
+                for (int j = 0; j < tableLayoutPanel1.ColumnCount; j++)
+                {
+                    var control = tableLayoutPanel1.GetControlFromPosition(j, i);
+                    if (control is not null)
+                    {
+                        tableLayoutPanel1.SetRow(control, i - 1);
+                    }
+                }
+            }
 
+            var removeStyle = tableLayoutPanel1.RowCount - 1;
 
+            if (tableLayoutPanel1.RowStyles.Count > removeStyle)
+                tableLayoutPanel1.RowStyles.RemoveAt(removeStyle);
+
+            tableLayoutPanel1.RowCount--;
         }
 
 
-       Func<object, bool> PredFromControl(QueryControlListElement queryControlListElement)
-       {
-            return obj =>
+
+
+
+
+
+
+
+
+
+        class QueryControlListElementToIQueryElementAdapter<T> : IQueryElement<T> /*адаптер x2*/
+        {
+
+
+            Regex RegexFromControl()
+            {
+
+                var regexType = queryControlListElement.comboBoxRegExType.SelectedItem as QueryControlListElement.ComboBoxItem;
+
+                var regexValue = Regex.Escape(queryControlListElement.textBoxValue.Text);
+
+                var param = queryControlListElement.textBoxParams.Text;
+
+
+
+
+                return new(regexType.ToString() switch
+                {
+                    "Полное совпадение" => regexValue,
+                    "Подстрока" when int.TryParse(param, out int idx) => $"^.{{{idx - 1}}}{regexValue}.*",
+                    "Подстрока" => $".*{regexValue}.*",
+                    "Диапазон" when int.TryParse(param, out int idx) => $"^.{{{idx - 1}}}[{regexValue}].*",
+                    "Диапазон" => $".*[{regexValue}].*",
+                    _ => ""
+                });
+            }
+
+
+            Func<T, bool> Pred => obj =>
             {
                 var propName = queryControlListElement.comboBoxProperties.SelectedItem.ToString();
                 var input = obj.GetType().GetProperty(propName).GetValue(obj).ToString();
-                var regEx = RegexFromControl(queryControlListElement);
+                var regEx = RegexFromControl();
                 return queryControlListElement.negationCheckBox.Checked ? !regEx.IsMatch(input) : regEx.IsMatch(input);
             };
-       }
 
 
-        Func<object, bool> PredFromList()
-        {
-            var listElements = GetQueryControlListElements().ToList();
 
+            QueryControlListElement queryControlListElement;
 
-            
-
-            var query = listElements.Select(le =>
-            le.IsValid ? 
-            (PredFromControl(le), le.Text) :
-            (_ => false, "ИЛИ"));
-
-            Func<object, bool> res = _ => true;
-
-            
-
-            foreach (var pair in query)
+            public QueryControlListElementToIQueryElementAdapter(QueryControlListElement element)
             {
-
-                var resDeepCopy = new Func<object, bool>(res);
-                res = pair.Item2 switch
-                {                          
-                    "ИЛИ" => obj => resDeepCopy(obj) || pair.Item1(obj),
-                    "И" or _ => obj => resDeepCopy(obj) && pair.Item1(obj)
-                };
+                queryControlListElement = element;
 
             }
-           
-            return res;
+            public bool IsRequired => queryControlListElement.Text != "ИЛИ";
 
-           
+
+
+            public bool IsMatch(T el) => Pred(el);
+
+
+            public bool IsMatch(object obj) => Pred((T)obj);
+
         }
 
 
-        IEnumerable<QueryControlListElement> GetQueryControlListElements() => tableLayoutPanel1.Controls.OfType<QueryControlListElement>();
+
+        class QueryControlListElementToIQueryElementAdapter : QueryControlListElementToIQueryElementAdapter<object>
+        {
+            public QueryControlListElementToIQueryElementAdapter(QueryControlListElement element) : base(element)
+            {
+            }
+        }
 
 
 
 
-        
-        public IEnumerable ApplyQuery(IEnumerable target) => target.Cast<object>().Where(PredFromList());
-      
- 
 
-      
+  ;
+
+
+
+
+
+        public IEnumerable ApplyQuery(IEnumerable target) =>
+            new QueryTree(
+                tableLayoutPanel1.Controls
+                .OfType<QueryControlListElement>()
+                .Where(el => el.IsValid)
+                .Select(el => new QueryControlListElementToIQueryElementAdapter(el))
+                )
+            .Apply(target);
+
 
         private void buttonOR_Click(object sender, EventArgs e)
         {
             var owner = sender as QueryControlListElement;
             owner.CurrentState = QueryControlListElement.State.Unactive;
-         
+
 
             var queryControlListElement = new QueryControlListElement(queryableProperties) { Text = owner.buttonOr.Text };
             queryControlListElement.AndClick += buttonAND_Click;
@@ -197,10 +200,10 @@ namespace OOP2_2
         private void buttonDelete_Click(object sender, EventArgs e)
         {
 
-           
+
             var owner = sender as QueryControlListElement;
 
-           
+
             var row = tableLayoutPanel1.Controls.GetChildIndex(owner);
             if (row > 0)
             {
@@ -209,9 +212,9 @@ namespace OOP2_2
                 {
                     (tableLayoutPanel1.GetControlFromPosition(0, row - 1) as QueryControlListElement).CurrentState = QueryControlListElement.State.Active;
                 }
-               
+
             }
-  
+
 
 
 
@@ -219,6 +222,6 @@ namespace OOP2_2
 
         }
 
-        
+
     }
 }

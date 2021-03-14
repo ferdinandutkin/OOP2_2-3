@@ -10,9 +10,9 @@ using System.Windows.Forms;
 namespace OOP2_2
 {
 
-    public class ListDataSource<T> : BindingSource
+    public class BindingListSourceAdapter<T> : BindingSource //адаптер
     {
-        public ListDataSource(BindingList<T> original)
+        public BindingListSourceAdapter(BindingList<T> original)
         {
 
             for (int i = 0; i < original.Count; i++)

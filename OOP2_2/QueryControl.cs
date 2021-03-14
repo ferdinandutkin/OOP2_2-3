@@ -16,9 +16,9 @@ namespace OOP2_2
         public QueryControl()
         {
             InitializeComponent();
- 
+
         }
 
-       
+
     }
 }

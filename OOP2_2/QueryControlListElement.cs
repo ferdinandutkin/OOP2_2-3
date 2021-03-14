@@ -13,7 +13,7 @@ namespace OOP2_2
 {
     public partial class QueryControlListElement : QueryControl
     {
-        
+
 
         public event EventHandler OrClick;
 
@@ -21,7 +21,7 @@ namespace OOP2_2
 
         public event EventHandler DeleteClick;
 
-        public enum State { Active, Unactive}
+        public enum State { Active, Unactive }
 
         State currentState = State.Active;
         public State CurrentState
@@ -29,7 +29,8 @@ namespace OOP2_2
             get => currentState;
             set
             {
-                if (value == currentState) {
+                if (value == currentState)
+                {
                     return;
                 }
                 else if (value == State.Unactive)
@@ -46,15 +47,15 @@ namespace OOP2_2
             }
 
         }
-        
+
         public class ComboBoxItem
         {
             public string Value { get; set; }
             public ComboBoxItem(string value) => Value = value;
-            public  static implicit operator ComboBoxItem(string s) => new ComboBoxItem(s);
+            public static implicit operator ComboBoxItem(string s) => new ComboBoxItem(s);
             public override string ToString() => Value;
 
-        
+
 
         }
 
@@ -82,6 +83,6 @@ namespace OOP2_2
 
         }
 
-        
+
     }
 }

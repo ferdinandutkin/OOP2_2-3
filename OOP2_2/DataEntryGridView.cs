@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace OOP2_2
 {
-    
+
     public partial class DataEntryGridView : DataGridView
     {
         public event Action<DataGridView, DataGridViewCellEventArgs> CellButtonClick;

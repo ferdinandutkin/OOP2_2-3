@@ -22,7 +22,7 @@ namespace OOP2_2
             public override string ToString() => FactoryMethod.GetCustomAttribute<FactoryMethodAttribute>()?.Name ?? FactoryMethod.Name;
 
             public FactoryMethodSelectionItem(MethodInfo factoryMethod) => FactoryMethod = factoryMethod;
-           
+
         }
 
         class FactoryClassSelectionItem
@@ -40,9 +40,9 @@ namespace OOP2_2
 
             Text = "FactoryForm";
 
-            
 
-           
+
+
 
             comboBoxClassName.Items.AddRange(Reflector.GetSubclasses<AbstractFactoryType>().Select(type => new FactoryClassSelectionItem(type)).ToArray());
 
@@ -67,11 +67,11 @@ namespace OOP2_2
         {
             if (comboBoxMethodName.SelectedItem is FactoryMethodSelectionItem factoryMethod && comboBoxClassName.SelectedItem is FactoryClassSelectionItem factoryClass)
             {
-              
+
                 object result = factoryMethod.FactoryMethod.Invoke(Activator.CreateInstance(factoryClass.FactoryClass), argumentTable.Arguments.ToArray());
                 ObjectCreated?.Invoke(this, result);
             }
-         
+
         }
 
         private void comboBoxMethodName_SelectedValueChanged(object sender, EventArgs e)
@@ -91,8 +91,8 @@ namespace OOP2_2
 
         private void comboBoxClassName_SelectedValueChanged(object sender, EventArgs e)
         {
-           if (comboBoxClassName.SelectedItem is FactoryClassSelectionItem factoryClass)
-           {
+            if (comboBoxClassName.SelectedItem is FactoryClassSelectionItem factoryClass)
+            {
                 comboBoxMethodName.Text = string.Empty;
                 comboBoxMethodName.Items.Clear();
                 comboBoxMethodName.Items.AddRange(Reflector.GetMethodsWithAttribute<FactoryMethodAttribute>(factoryClass.FactoryClass).Select(method => new FactoryMethodSelectionItem(method)).ToArray());
